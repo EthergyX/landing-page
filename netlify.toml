@@ -6,11 +6,5 @@
   package = "@netlify/plugin-nextjs"
 
 [build.environment]
-  # Set Go version to 1.19
-  GO_VERSION = "1.19"
-  
-  # Set a correct Python version (3.9 is widely supported)
+  # Set the exact Python version
   PYTHON_VERSION = "3.9.21"
-  
-  # Don't try to modify PATH as it might cause issues
-  # PATH = "/tmp/go/bin:${PATH}"
