@@ -7,4 +7,4 @@
 
 [build.environment]
   # Set the exact Python version
-  PYTHON_VERSION = "3.9.21"
+  PYTHON_VERSION = "3.9.16"
