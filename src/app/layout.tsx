@@ -5,7 +5,7 @@ import '../styles/globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'EnergyGrid | Virtual Power Plant Solutions',
+  title: 'EthergyX | Virtual Power Plant Solutions',
   description: 'Scaling virtual power plant deployments for a sustainable future',
 };
 

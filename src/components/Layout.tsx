@@ -30,7 +30,7 @@ const Layout = ({ children }: LayoutProps): JSX.Element => {
             </Link>
             
             <div className="hidden md:flex space-x-8">
-              <Link href="#solutions" className="hover:text-blue-300 transition duration-300">Solutions</Link>
+              <Link href="/solutions" className="hover:text-blue-300 transition duration-300">Solutions</Link>
               <Link href="/team" className="hover:text-blue-300 transition duration-300">Team</Link>
               <Link href="/about" className="hover:text-blue-300 transition duration-300">About</Link>
               <Link href="/contact" className="hover:text-blue-300 transition duration-300">Contact</Link>

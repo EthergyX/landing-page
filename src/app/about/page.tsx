@@ -16,7 +16,7 @@ export default function About(): JSX.Element {
             transition={{ duration: 0.8 }}
             className="text-4xl md:text-5xl font-bold mb-6"
           >
-            About <span className="text-blue-400">EnergyGrid</span>
+            About <span className="text-blue-400">EthergyX</span>
           </motion.h1>
           
           <motion.p
@@ -43,7 +43,7 @@ export default function About(): JSX.Element {
               <h2 className="text-3xl font-bold mb-6">Our Story</h2>
               <div className="space-y-4 text-blue-100 text-lg">
                 <p>
-                  Founded in 2020, EnergyGrid began with a simple but powerful vision: to create a more resilient, sustainable energy ecosystem through the power of distributed energy resources.
+                  Founded in 2024, EthergyX began with a simple but powerful vision: to create a more resilient, sustainable energy ecosystem through the power of distributed energy resources.
                 </p>
                 <p>
                   Our founders, with backgrounds in renewable energy and software development, recognized that the traditional centralized power grid was becoming increasingly vulnerable to disruptions and unable to efficiently integrate the growing number of renewable energy sources.
@@ -52,7 +52,7 @@ export default function About(): JSX.Element {
                   We set out to develop a platform that could orchestrate thousands of distributed energy assets—from residential solar panels and batteries to commercial microgrids—creating virtual power plants that benefit both grid operators and energy consumers.
                 </p>
                 <p>
-                  Today, EnergyGrid's technology helps utilities, energy aggregators, and large facilities optimize their energy usage, reduce costs, and contribute to a more sustainable future.
+                  Today, EthergyX's technology helps utilities, energy aggregators, and large facilities optimize their energy usage, reduce costs, and contribute to a more sustainable future.
                 </p>
               </div>
             </motion.div>

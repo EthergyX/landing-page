@@ -2,33 +2,38 @@
 // src/app/team/page.tsx
 import { motion } from 'framer-motion';
 import Layout from '@/components/Layout';
+import Image from 'next/image';
 
 export default function Team(): JSX.Element {
   // Team members data
   const teamMembers = [
     {
-      name: "Sarah Johnson",
+      name: "Ethan Chriss",
       position: "Chief Executive Officer",
-      bio: "With over 15 years of experience in renewable energy, Sarah leads our vision to transform the energy grid with innovative VPP technology.",
-      imgSrc: "/team/sarah.jpg" // You'll need to add these images
+      bio: "Ethan is the founder of EthergyX. He is passionate about the energy transition and is excited to find innovative solutions to faciliate growing energy demand.",
+      linkedinUrl: "https://www.linkedin.com/in/ethan-chriss",
+      imgSrc: "/team/EthanHeadshot.jpg" // You'll need to add these images
     },
     {
-      name: "Michael Chen",
-      position: "Chief Technology Officer",
-      bio: "Michael brings extensive experience in energy systems and software architecture, overseeing the development of our cutting-edge VPP platform.",
-      imgSrc: "/team/michael.jpg"
+      name: "Jake Oswald",
+      position: "Chief Product Officer",
+      bio: "Jake is working towards his Masters of Geographic Information Systems and Technolgies. He is building a program to optimize DER deployments in virtual power plants.",
+      linkedinUrl: "https://www.linkedin.com/in/jake-oswald",
+      imgSrc: "/team/JakeHeadshot.jpg"
     },
     {
-      name: "David Rodriguez",
-      position: "Head of Grid Integration",
-      bio: "David specializes in utility partnerships and ensuring seamless integration between our virtual power plants and existing grid infrastructure.",
-      imgSrc: "/team/david.jpg"
+      name: "Bryan Chay",
+      position: "Chief Financial Officer",
+      bio: "Bryan has experience with energy and infrastructure financing. He is building a platformto optimize DER financing for community microgrids and virtual power plants.",
+      linkedinUrl: "https://www.linkedin.com/in/bryan-chay",
+      imgSrc: "/team/BryanHeadshot.jpg"
     },
     {
-      name: "Priya Patel",
-      position: "Data Science Lead",
-      bio: "Priya leads our analytics team, developing predictive algorithms that optimize energy distribution and maximize efficiency across the network.",
-      imgSrc: "/team/priya.jpg"
+      name: "Josh Gallardy",
+      position: "Renewable Energy Specialist",
+      bio: "Josh graduated from UC San Diego and has experience in the renewable energy sector. He is working on building software solutions for distributed energy resources.",
+      linkedinUrl: "https://www.linkedin.com/in/josh-gallardy",
+      imgSrc: "/team/JoshHeadshot.jpg"
     }
   ];
 
@@ -52,7 +57,7 @@ export default function Team(): JSX.Element {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl max-w-3xl mx-auto text-blue-100"
           >
-            The innovative minds behind EnergyGrid's virtual power plant technology
+            The innovative minds behind EthergyX's virtual power plant technology
           </motion.p>
         </div>
       </div>
@@ -73,13 +78,13 @@ export default function Team(): JSX.Element {
                 <div className="md:w-1/3">
                   <div className="rounded-xl overflow-hidden aspect-square bg-blue-900/30 flex items-center justify-center">
                     {/* If you have actual images, use this: */}
-                    {/* <Image
+                    <Image
                       src={member.imgSrc}
                       alt={`${member.name} - ${member.position}`}
                       width={300}
                       height={300}
                       className="w-full h-full object-cover"
-                    /> */}
+                    />
                     
                     {/* Placeholder for when you don't have images yet */}
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-blue-400 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,14 +99,16 @@ export default function Team(): JSX.Element {
                   <p className="text-blue-100">{member.bio}</p>
                   
                   <div className="mt-4 flex space-x-3">
-                    <a href="#" className="text-blue-300 hover:text-blue-400 transition duration-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    {/* LinkedIn link */}
+                    <a
+                        href={member.linkedinUrl}
+                        target="_blank"            // Open in new tab
+                        rel="noopener noreferrer"  // Security best practice
+                        className="text-blue-300 hover:text-blue-400 transition duration-300"
+                    >
+                        {/* LinkedIn SVG icon */}
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                      </svg>
-                    </a>
-                    <a href="#" className="text-blue-300 hover:text-blue-400 transition duration-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
                       </svg>
                     </a>
                   </div>
@@ -194,8 +201,11 @@ export default function Team(): JSX.Element {
               Interested in helping build the energy grid of tomorrow? We're always looking for talented individuals who share our passion for innovation and sustainability.
             </p>
             
-            <a href="/careers" className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition duration-300 inline-block">
-              View Open Positions
+            <a 
+                href="/contact"
+                className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition duration-300 inline-block"
+            >
+                Contact Us
             </a>
           </motion.div>
         </div>

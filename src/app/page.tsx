@@ -141,7 +141,7 @@ export default function Home(): JSX.Element {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-xl mb-8 text-blue-100"
               >
-                Our platform orchestrates thousands of distributed energy resources,
+                Virtual power plants orchestrate thousands of distributed energy resources,
                 creating a resilient network that responds to grid demands in real-time.
               </motion.p>
               
