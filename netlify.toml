@@ -1,10 +1,11 @@
 [build]
-  command = "npm run build"
+  command = "./setup-go.sh"
   publish = ".next"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 [build.environment]
-  NETLIFY_USE_YARN = "false"
-  GO_IMPORT_PATH = ""
+  GO_VERSION = "1.19"
+  # Add Go binary location to PATH
+  PATH = "/tmp/go/bin:${PATH}"
