@@ -1,9 +1,9 @@
-'use client'
+"use client"
 // src/components/Layout.tsx
-import Link from 'next/link';
-import Image from 'next/image';
-import { ReactNode } from 'react';
-import EnergyAnimation from './EnergyAnimation';
+import Link from "next/link";
+import Image from "next/image";
+import { ReactNode } from "react";
+import EnergyAnimation from "./EnergyAnimation";
 
 interface LayoutProps {
   children: ReactNode;

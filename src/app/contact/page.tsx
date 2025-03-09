@@ -1,7 +1,7 @@
-'use client'
+"use client"
 // src/app/contact/page.tsx
-import { motion } from 'framer-motion';
-import Layout from '@/components/Layout';
+import { motion } from "framer-motion";
+import Layout from "@/components/Layout";
 
 export default function Contact(): JSX.Element {
   return (

@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import '../styles/globals.css';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "../styles/globals.css";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'EthergyX | Virtual Power Plant Solutions',
-  description: 'Scaling virtual power plant deployments for a sustainable future',
+  title: "EthergyX | Virtual Power Plant Solutions",
+  description: "Scaling virtual power plant deployments for a sustainable future",
 };
 
 export default function RootLayout({

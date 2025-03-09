@@ -1,8 +1,8 @@
-'use client'
+"use client";
 // src/app/about/page.tsx
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import Layout from '@/components/Layout';
+import Link from "next/link";
+import { motion } from "framer-motion";
+import Layout from "@/components/Layout";
 
 export default function About(): JSX.Element {
   return (
@@ -52,7 +52,7 @@ export default function About(): JSX.Element {
                   We set out to develop a platform that could orchestrate thousands of distributed energy assets—from residential solar panels and batteries to commercial microgrids—creating virtual power plants that benefit both grid operators and energy consumers.
                 </p>
                 <p>
-                  Today, EthergyX's technology helps utilities, energy aggregators, and large facilities optimize their energy usage, reduce costs, and contribute to a more sustainable future.
+                  Today, EthergyX&apos;s technology helps utilities, energy aggregators, and large facilities optimize their energy usage, reduce costs, and contribute to a more sustainable future.
                 </p>
               </div>
             </motion.div>
@@ -150,7 +150,10 @@ export default function About(): JSX.Element {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <Link href="/contact" className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-4 px-10 rounded-lg transition duration-300 inline-block">
+            <Link
+              href="/contact"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-4 px-10 rounded-lg transition duration-300 inline-block"
+            >
               Schedule a Demo
             </Link>
           </motion.div>

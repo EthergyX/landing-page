@@ -1,8 +1,8 @@
-'use client'
+"use client";
 // src/app/page.tsx
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import Layout from '@/components/Layout';
+import Link from "next/link";
+import { motion } from "framer-motion";
+import Layout from "@/components/Layout";
 
 export default function Home(): JSX.Element {
   return (
@@ -19,12 +19,12 @@ export default function Home(): JSX.Element {
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
               Powering the <span className="text-blue-400">Future</span> of Energy
             </h1>
-            
+
             <p className="text-xl md:text-2xl mb-10 text-blue-50">
               We build innovative tools to scale virtual power plant deployments, 
               creating a more resilient and sustainable energy ecosystem.
             </p>
-            
+
             <div className="flex flex-wrap gap-4">
               <a 
                 href="#solutions" 
@@ -81,7 +81,9 @@ export default function Home(): JSX.Element {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3">Energy Optimization</h3>
-              <p className="text-blue-100">Advanced algorithms that optimize energy distribution across virtual power plants for maximum efficiency and grid stability.</p>
+              <p className="text-blue-100">
+                Advanced algorithms that optimize energy distribution across virtual power plants for maximum efficiency and grid stability.
+              </p>
             </motion.div>
             
             <motion.div 
@@ -93,11 +95,22 @@ export default function Home(): JSX.Element {
             >
               <div className="rounded-full bg-green-500/20 w-16 h-16 flex items-center justify-center mb-6">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  <path 
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 
+                    11.955 0 0112 2.944a11.955 11.955 0 
+                    01-8.618 3.04A12.02 12.02 0 003 9c0 
+                    5.591 3.824 10.29 9 11.622 5.176-1.332 
+                    9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3">Grid Integration</h3>
-              <p className="text-blue-100">Seamless integration tools that connect distributed energy resources to existing power infrastructure for reliable operation.</p>
+              <p className="text-blue-100">
+                Seamless integration tools that connect distributed energy resources to existing power infrastructure for reliable operation.
+              </p>
             </motion.div>
             
             <motion.div 
@@ -109,11 +122,26 @@ export default function Home(): JSX.Element {
             >
               <div className="rounded-full bg-purple-500/20 w-16 h-16 flex items-center justify-center mb-6">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 
+                    00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 
+                    0V9a2 2 0 012-2h2a2 2 0 
+                    012 2v10m-6 0a2 2 0 002 2h2a2 2 0 
+                    002-2m0 0V5a2 2 0 
+                    012-2h2a2 2 0 
+                    012 2v14a2 2 0 
+                    01-2 2h-2a2 2 0 
+                    01-2-2z"
+                  />
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-3">Analytics Dashboard</h3>
-              <p className="text-blue-100">Real-time monitoring and analytics to track performance, forecast demand, and identify optimization opportunities.</p>
+              <p className="text-blue-100">
+                Real-time monitoring and analytics to track performance, forecast demand, and identify optimization opportunities.
+              </p>
             </motion.div>
           </div>
         </div>
@@ -228,7 +256,10 @@ export default function Home(): JSX.Element {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <Link href="/contact" className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-4 px-10 rounded-lg transition duration-300 inline-block">
+            <Link
+              href="/contact"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-4 px-10 rounded-lg transition duration-300 inline-block"
+            >
               Schedule a Demo
             </Link>
           </motion.div>
