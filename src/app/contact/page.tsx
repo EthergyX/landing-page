@@ -21,7 +21,7 @@ export default function Contact(): JSX.Element {
             
             <p className="text-xl text-blue-50 mb-10">
               Have questions about our platform or want to schedule a demo?
-              We'd love to hear from you.
+              We&apos;d love to hear from you.
             </p>
           </motion.div>
         </div>
