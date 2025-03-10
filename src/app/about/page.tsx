@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 
-export default function About(): JSX.Element {
+export default function About() {
   return (
     <Layout>
       {/* About Hero Section */}
