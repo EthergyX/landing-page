@@ -8,4 +8,4 @@
 [build.environment]
   # Set the exact Python version
   NODE_VERSION = "22.x"
-  PYTHON_VERSION = "3.13"
+  PYTHON_VERSION = "3.9.21"
