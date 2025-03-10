@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import Image from "next/image";
 
-export default function Team(): JSX.Element {
+export default function Team() {
   // Team members data
   const teamMembers = [
     {

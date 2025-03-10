@@ -16,7 +16,7 @@ const partnerLogos = [
   { src: "/apipartners/SolisLogo.png", alt: "Solis" },
 ];
 
-export default function Solutions(): JSX.Element {
+export default function Solutions() {
   // Solution categories
   const solutionCategories = [
     {

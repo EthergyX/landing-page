@@ -30,7 +30,7 @@ interface Particle {
   pulseSpeed: number;
 }
 
-const EnergyAnimation = (): JSX.Element => {
+const EnergyAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -85,9 +85,9 @@ const EnergyAnimation = (): JSX.Element => {
         speed: Math.random() * 2 + 0.5,
         directionX: Math.random() * 2 - 1,
         directionY: Math.random() * 2 - 1,
-        color: `hsla(${Math.random() * 60 + 180}, 90%, ${
-          Math.random() * 30 + 50
-        }%, ${Math.random() * 0.5 + 0.3})`,
+        color: `hsla(${
+          Math.random() * 60 + 180
+        }, 90%, ${Math.random() * 30 + 50}%, ${Math.random() * 0.5 + 0.3})`,
         pulse: 0,
         pulseSpeed: Math.random() * 0.05 + 0.01,
       });
@@ -149,7 +149,6 @@ const EnergyAnimation = (): JSX.Element => {
         if (particle.x < 0 || particle.x > canvas.width) {
           particle.directionX *= -1;
         }
-
         if (particle.y < 0 || particle.y > canvas.height) {
           particle.directionY *= -1;
         }

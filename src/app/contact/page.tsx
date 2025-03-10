@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 
-export default function Contact(): JSX.Element {
+export default function Contact() {
   return (
     <Layout>
       {/* Contact Hero Section */}

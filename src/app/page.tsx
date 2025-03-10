@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 
-export default function Home(): JSX.Element {
+export default function Home() {
   return (
     <Layout>
       {/* Hero Section taking up the full viewport height */}
