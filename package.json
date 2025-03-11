@@ -7,6 +7,7 @@
     "build": "next build --debug",
     "start": "next start",
     "lint": "next lint"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",

@@ -4,6 +4,12 @@
 
 [build.environment]
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  NODE_VERSION = "18.17.0"  # Ensure compatible Node version
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[functions]
+  # Increase function timeout for API routes (optional)
+  node_bundler = "esbuild"
+  external_node_modules = ["@supabase/supabase-js"]
