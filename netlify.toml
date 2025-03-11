@@ -3,13 +3,7 @@
   publish = ".next"
 
 [build.environment]
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
-  NODE_VERSION = "20.0.0"  # Ensure compatible Node version
+  NODE_VERSION = "22"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-[functions]
-  # Increase function timeout for API routes (optional)
-  node_bundler = "esbuild"
-  external_node_modules = ["@supabase/supabase-js"]

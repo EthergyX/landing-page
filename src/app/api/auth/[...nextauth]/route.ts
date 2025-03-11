@@ -4,7 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { supabase } from "@/lib/supabase";
 
-export const authOptions = {
+// Configure the authentication options
+const handler = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -68,7 +69,7 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET || "your-secret-key-change-in-production",
   debug: process.env.NODE_ENV === "development",
-};
+});
 
-const handler = NextAuth(authOptions);
+// Export the handler as GET and POST
 export { handler as GET, handler as POST };
