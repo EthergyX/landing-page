@@ -56,7 +56,7 @@ export default function Contact() {
           message: "Oops! Something went wrong; please try again.",
         });
       }
-    } catch (error) {
+    } catch (_error) {
       setFormStatus({
         submitted: true,
         success: false,
