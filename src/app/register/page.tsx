@@ -6,6 +6,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 
+type ErrorType = Error | string | unknown;
+
 export default function Register() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -64,8 +66,9 @@ export default function Register() {
 
       // Redirect to login page after successful registration
       router.push("/login?registered=true");
-    } catch (error: any) {
-      setError(error.message || "An error occurred during registration");
+    } catch (err: ErrorType) {
+      const errorMessage = err instanceof Error ? err.message : "An error occurred during registration";
+      setError(errorMessage);
       setIsLoading(false);
     }
   };

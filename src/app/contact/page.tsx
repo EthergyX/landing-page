@@ -36,7 +36,7 @@ export default function Contact() {
     setFormStatus({
       submitted: true,
       success: true,
-      message: "Your message has been sent! We'll get back to you soon.",
+      message: "Your message has been sent! We&apos;ll get back to you soon.",
     });
     
     // Reset form after submission
@@ -115,7 +115,7 @@ export default function Contact() {
                     <input type="hidden" name="form-name" value="contact" />
                     <p className="hidden">
                       <label>
-                        Don't fill this out if you're human: <input name="bot-field" />
+                        Don&apos;t fill this out if you&apos;re human: <input name="bot-field" />
                       </label>
                     </p>
                     
