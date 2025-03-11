@@ -56,11 +56,13 @@ export default function Contact() {
           message: "Oops! Something went wrong; please try again.",
         });
       }
-    } catch (_error) {
-      setFormStatus({
-        submitted: true,
-        success: false,
-        message: "Oops! Something went wrong; please try again.",
+    } catch (error) {
+        console.error(error);
+        
+        setFormStatus({
+            submitted: true,
+            success: false,
+            message: "Oops! Something went wrong; please try again.",
       });
     }
   };
