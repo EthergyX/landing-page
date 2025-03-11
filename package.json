@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@opennextjs/netlify": "^5.10.0",
     "@tailwindcss/postcss": "^4.0.12",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
