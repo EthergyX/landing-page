@@ -1,5 +1,4 @@
 "use client"
-// src/app/contact/page.tsx
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
@@ -10,6 +9,7 @@ export default function Contact() {
     email: "",
     message: "",
   });
+
   const [formStatus, setFormStatus] = useState<{
     submitted: boolean;
     success?: boolean;
@@ -27,20 +27,42 @@ export default function Contact() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormStatus({ submitted: true });
-    
-    // The form will be handled by Netlify automatically 
-    // We just need to show a success message to the user
-    setFormStatus({
-      submitted: true,
-      success: true,
-      message: "Your message has been sent! We&apos;ll get back to you soon.",
-    });
-    
-    // Reset form after submission
-    setFormState({ name: "", email: "", message: "" });
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // We do this if we're posting manually by fetch
+
+    // Construct a form-data object from the event’s target
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      // POST to "/" so Netlify can intercept the submission
+      const response = await fetch("/", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        setFormStatus({
+          submitted: true,
+          success: true,
+          message: "Your message has been sent! We'll get back to you soon.",
+        });
+        // Reset the form inputs
+        setFormState({ name: "", email: "", message: "" });
+      } else {
+        setFormStatus({
+          submitted: true,
+          success: false,
+          message: "Oops! Something went wrong; please try again.",
+        });
+      }
+    } catch (error) {
+      setFormStatus({
+        submitted: true,
+        success: false,
+        message: "Oops! Something went wrong; please try again.",
+      });
+    }
   };
 
   return (
@@ -57,7 +79,6 @@ export default function Contact() {
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Get in <span className="text-blue-400">Touch</span>
             </h1>
-            
             <p className="text-xl text-blue-50 mb-10">
               Have questions about our platform or want to schedule a demo?
               We&apos;d love to hear from you.
@@ -65,7 +86,7 @@ export default function Contact() {
           </motion.div>
         </div>
       </div>
-      
+
       {/* Contact Form Section */}
       <div className="py-20 bg-gray-900/90 backdrop-blur-lg">
         <div className="container mx-auto px-6">
@@ -78,20 +99,18 @@ export default function Contact() {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="text-3xl font-bold mb-6">Contact Us</h2>
-                
                 <div className="space-y-8">
                   <div>
                     <h3 className="text-xl font-semibold mb-2 text-blue-300">Email</h3>
                     <p className="text-blue-100">contact@ethergyx.com</p>
                   </div>
-                  
                   <div>
                     <h3 className="text-xl font-semibold mb-2 text-blue-300">Phone</h3>
                     <p className="text-blue-100">(479) 257-0054</p>
                   </div>
                 </div>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -100,27 +119,33 @@ export default function Contact() {
               >
                 {formStatus.submitted && formStatus.success ? (
                   <div className="bg-green-500/20 border border-green-500/30 p-6 rounded-lg">
-                    <h3 className="text-xl font-semibold mb-2 text-green-300">Message Sent!</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-green-300">
+                      Message Sent!
+                    </h3>
                     <p className="text-white">{formStatus.message}</p>
                   </div>
                 ) : (
-                  <form 
-                    className="space-y-6" 
-                    name="contact" 
-                    method="POST" 
+                  <form
+                    className="space-y-6"
+                    name="contact"
+                    method="POST"
                     data-netlify="true"
                     netlify-honeypot="bot-field"
                     onSubmit={handleSubmit}
                   >
+                    {/* Hidden input for Netlify */}
                     <input type="hidden" name="form-name" value="contact" />
                     <p className="hidden">
                       <label>
-                        Don&apos;t fill this out if you&apos;re human: <input name="bot-field" />
+                        Don’t fill this out if you’re human:{" "}
+                        <input name="bot-field" />
                       </label>
                     </p>
-                    
+
                     <div>
-                      <label htmlFor="name" className="block text-blue-200 mb-2">Name</label>
+                      <label htmlFor="name" className="block text-blue-200 mb-2">
+                        Name
+                      </label>
                       <input
                         type="text"
                         id="name"
@@ -132,9 +157,11 @@ export default function Contact() {
                         onChange={handleChange}
                       />
                     </div>
-                    
+
                     <div>
-                      <label htmlFor="email" className="block text-blue-200 mb-2">Email</label>
+                      <label htmlFor="email" className="block text-blue-200 mb-2">
+                        Email
+                      </label>
                       <input
                         type="email"
                         id="email"
@@ -146,9 +173,14 @@ export default function Contact() {
                         onChange={handleChange}
                       />
                     </div>
-                    
+
                     <div>
-                      <label htmlFor="message" className="block text-blue-200 mb-2">Message</label>
+                      <label
+                        htmlFor="message"
+                        className="block text-blue-200 mb-2"
+                      >
+                        Message
+                      </label>
                       <textarea
                         id="message"
                         name="message"
@@ -158,16 +190,16 @@ export default function Contact() {
                         required
                         value={formState.message}
                         onChange={handleChange}
-                      ></textarea>
+                      />
                     </div>
-                    
+
                     <button
                       type="submit"
                       className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition duration-300 w-full"
                       disabled={formStatus.submitted && !formStatus.success}
                     >
-                      {formStatus.submitted && !formStatus.success 
-                        ? "Sending..." 
+                      {formStatus.submitted && !formStatus.success
+                        ? "Sending..."
                         : "Send Message"}
                     </button>
                   </form>
