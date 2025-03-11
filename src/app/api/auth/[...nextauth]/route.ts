@@ -2,7 +2,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { users } from "../../register/route";
+import { supabase } from "@/lib/supabase";
 
 export const authOptions = {
   providers: [
@@ -17,38 +17,41 @@ export const authOptions = {
           return null;
         }
 
-        // For debugging
-        console.log("Login attempt for:", credentials.email);
-        console.log("Available users:", users.map(u => ({id: u.id, email: u.email})));
+        try {
+          // Query the user from Supabase
+          const { data: user, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("email", credentials.email.toLowerCase())
+            .single();
 
-        // Find user by email (case insensitive)
-        const user = users.find(
-          (u) => u.email.toLowerCase() === credentials.email.toLowerCase()
-        );
-        
-        if (!user) {
-          console.log("User not found:", credentials.email);
+          if (error || !user) {
+            console.log("User not found:", credentials.email);
+            return null;
+          }
+
+          // Check if the password matches
+          const passwordMatch = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+
+          if (!passwordMatch) {
+            console.log("Password doesn't match for:", credentials.email);
+            return null;
+          }
+
+          console.log("Login successful for:", credentials.email);
+          
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
           return null;
         }
-
-        // Check if the password matches
-        const passwordMatch = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!passwordMatch) {
-          console.log("Password doesn't match for:", credentials.email);
-          return null;
-        }
-
-        console.log("Login successful for:", credentials.email);
-        
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        };
       },
     }),
   ],
