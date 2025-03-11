@@ -3,6 +3,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { supabase } from "@/lib/supabase";
+import type { JWT } from "next-auth/jwt";
+import type { Session } from "next-auth";
 
 // Configure the authentication options
 const handler = NextAuth({
@@ -60,7 +62,7 @@ const handler = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token?: JWT }) {
       if (token && session.user) {
         session.user.id = token.sub;
       }
