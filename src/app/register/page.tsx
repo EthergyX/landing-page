@@ -1,10 +1,11 @@
 "use client";
-// src/app/register/page.tsx
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
+import { isSupabaseConfigured } from "@/lib/supabase";
 
 export default function Register() {
   const router = useRouter();
@@ -16,6 +17,14 @@ export default function Register() {
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [configWarning, setConfigWarning] = useState("");
+
+  useEffect(() => {
+    // Check if Supabase is configured
+    if (!isSupabaseConfigured()) {
+      setConfigWarning("Warning: Supabase is not properly configured. Registration will not work.");
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -85,6 +94,12 @@ export default function Register() {
               <h1 className="text-3xl font-bold mb-6 text-center">
                 Create Your <span className="text-blue-400">Account</span>
               </h1>
+
+              {configWarning && (
+                <div className="bg-yellow-500/20 border border-yellow-500/30 p-3 rounded mb-4 text-white">
+                  {configWarning}
+                </div>
+              )}
 
               {error && (
                 <div className="bg-red-500/20 border border-red-500/30 p-3 rounded mb-4 text-white">

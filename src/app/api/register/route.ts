@@ -1,10 +1,19 @@
 // src/app/api/register/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
+    // Check if Supabase is configured
+    if (!isSupabaseConfigured()) {
+      console.error("Supabase is not configured - registration will fail");
+      return NextResponse.json(
+        { error: "Database connection not configured. Please contact the administrator." },
+        { status: 500 }
+      );
+    }
+
     const body = await req.json();
     const { name, email, password } = body;
 
@@ -16,12 +25,38 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Invalid email format" },
+        { status: 400 }
+      );
+    }
+
+    // Validate password length
+    if (password.length < 8) {
+      return NextResponse.json(
+        { error: "Password must be at least 8 characters long" },
+        { status: 400 }
+      );
+    }
+
     // Check if user already exists
-    const { data: existingUser } = await supabase
+    const { data: existingUser, error: queryError } = await supabase
       .from("users")
       .select("*")
       .eq("email", email.toLowerCase())
       .single();
+
+    if (queryError && queryError.code !== "PGRST116") {
+      // PGRST116 is the error code for "no rows returned"
+      console.error("Error checking existing user:", queryError);
+      return NextResponse.json(
+        { error: "Database error: " + queryError.message },
+        { status: 500 }
+      );
+    }
 
     if (existingUser) {
       return NextResponse.json(
@@ -34,18 +69,28 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user
-    const { error } = await supabase.from("users").insert([
+    const { error: insertError } = await supabase.from("users").insert([
       {
         name,
         email: email.toLowerCase(),
         password: hashedPassword,
+        created_at: new Date().toISOString(),
       },
     ]);
 
-    if (error) {
-      console.error("Error creating user:", error);
+    if (insertError) {
+      console.error("Error creating user:", insertError);
+      let errorMessage = "Failed to create user";
+      
+      // Check if it's a foreign key constraint or table doesn't exist
+      if (insertError.code === "23503") {
+        errorMessage = "Foreign key constraint error. Database schema issue.";
+      } else if (insertError.code === "42P01") {
+        errorMessage = "Table 'users' does not exist. Database setup issue.";
+      }
+      
       return NextResponse.json(
-        { error: "Failed to create user" },
+        { error: errorMessage, details: insertError.message },
         { status: 500 }
       );
     }
@@ -56,8 +101,9 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Registration error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: errorMessage },
       { status: 500 }
     );
   }

@@ -1,17 +1,17 @@
 "use client";
 
-// app/login/page.tsx
 import React, { Suspense, useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
+import { isSupabaseConfigured } from "@/lib/supabase";
 
 export default function Login() {
   return (
     <Layout>
-      {/* Suspense boundary so Next.js is happy with useSearchParams() */}
+      {/* Suspense boundary for useSearchParams() */}
       <Suspense fallback={<p>Loading login...</p>}>
         <LoginForm />
       </Suspense>
@@ -31,8 +31,14 @@ function LoginForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [configWarning, setConfigWarning] = useState("");
 
   useEffect(() => {
+    // Check if Supabase is configured
+    if (!isSupabaseConfigured()) {
+      setConfigWarning("Warning: Supabase is not properly configured. Authentication will not work.");
+    }
+
     // Check if user was just registered
     const registered = searchParams.get("registered");
     if (registered === "true") {
@@ -73,7 +79,7 @@ function LoginForm() {
       router.push("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
-      setError("An error occurred during login");
+      setError("An error occurred during login. Please check your connection and try again.");
       setIsLoading(false);
     }
   };
@@ -91,6 +97,12 @@ function LoginForm() {
             <h1 className="text-3xl font-bold mb-6 text-center">
               Log <span className="text-blue-400">In</span>
             </h1>
+
+            {configWarning && (
+              <div className="bg-yellow-500/20 border border-yellow-500/30 p-3 rounded mb-4 text-white">
+                {configWarning}
+              </div>
+            )}
 
             {error && (
               <div className="bg-red-500/20 border border-red-500/30 p-3 rounded mb-4 text-white">
