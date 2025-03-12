@@ -18,7 +18,7 @@ export default function Team() {
       name: "Jake Oswald",
       position: "Chief Product Officer",
       bio: "Jake is working towards his Master's of Geographic Information Systems and Technologies. He is building a program to optimize DER deployments in virtual power plants.",
-      linkedinUrl: "https://www.linkedin.com/in/jake-oswald",
+      linkedinUrl: "https://www.linkedin.com/in/ake-oswald-472480214",
       imgSrc: "/team/JakeHeadshot.jpg",
     },
     {
