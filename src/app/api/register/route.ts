@@ -2,8 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
-
-import { validatePassword } from "@/utils/passwordUtils";
+import { checkPassword } from "@/utils/passwordUtils";
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,11 +35,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate password complexity
-    const passwordCheck = validatePassword(password);
+    // Validate password using our simplified validator
+    const passwordCheck = checkPassword(password);
     if (!passwordCheck.valid) {
       return NextResponse.json(
-        { error: passwordCheck.message },
+        { error: "Password must be at least 8 characters long and include uppercase, lowercase, and numbers" },
         { status: 400 }
       );
     }
