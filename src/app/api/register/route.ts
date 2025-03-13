@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
+import { validatePassword } from "@/utils/passwordUtils";
+
 export async function POST(req: NextRequest) {
   try {
     // Check if Supabase is configured
@@ -34,10 +36,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate password length
-    if (password.length < 8) {
+    // Validate password complexity
+    const passwordCheck = validatePassword(password);
+    if (!passwordCheck.valid) {
       return NextResponse.json(
-        { error: "Password must be at least 8 characters long" },
+        { error: passwordCheck.message },
         { status: 400 }
       );
     }

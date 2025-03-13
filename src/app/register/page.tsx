@@ -7,6 +7,112 @@ import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import { isSupabaseConfigured } from "@/lib/supabase";
 
+// Password strength calculation
+const calculatePasswordStrength = (password: string) => {
+  if (!password) return { score: 0, valid: false };
+  
+  let score = 0;
+  let valid = false;
+  
+  // Check length
+  const hasMinLength = password.length >= 8;
+  if (hasMinLength) score += 1;
+  
+  // Check complexity
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[^A-Za-z0-9]/.test(password);
+  
+  // Count character types
+  let typesCount = 0;
+  if (hasUppercase) typesCount++;
+  if (hasLowercase) typesCount++;
+  if (hasNumber) typesCount++;
+  if (hasSpecial) typesCount++;
+  
+  // Add to score based on character types
+  score += typesCount;
+  
+  // Extra points for longer passwords
+  if (password.length >= 12) score += 1;
+  
+  // Password is valid if it has minimum length and at least 3 character types
+  valid = hasMinLength && typesCount >= 3;
+  
+  return {
+    score: Math.min(score, 6), // Cap at 6
+    valid,
+    hasMinLength,
+    hasUppercase,
+    hasLowercase,
+    hasNumber,
+    hasSpecial,
+    typesCount
+  };
+};
+
+// Password strength indicator component
+const PasswordStrength = ({ password }: { password: string }) => {
+  const strength = calculatePasswordStrength(password);
+  const strengthPercentage = (strength.score / 6) * 100;
+  
+  let strengthLabel = "Very Weak";
+  let strengthColor = "bg-red-500";
+  
+  if (strength.score >= 5) {
+    strengthLabel = "Strong";
+    strengthColor = "bg-green-500";
+  } else if (strength.score >= 4) {
+    strengthLabel = "Good";
+    strengthColor = "bg-green-400";
+  } else if (strength.score >= 3) {
+    strengthLabel = "Fair";
+    strengthColor = "bg-yellow-400";
+  } else if (strength.score >= 2) {
+    strengthLabel = "Weak";
+    strengthColor = "bg-red-400";
+  }
+  
+  return (
+    <div className="mt-2">
+      <div className="flex justify-between mb-1">
+        <span className="text-sm text-blue-200">Password Strength</span>
+        <span className="text-sm text-blue-200">{strengthLabel}</span>
+      </div>
+      <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+        <div
+          className={`h-full ${strengthColor} transition-all duration-300 ease-in-out`}
+          style={{ width: `${strengthPercentage}%` }}
+        ></div>
+      </div>
+      <div className="mt-2 text-xs text-blue-200 space-y-1">
+        <p>Password requirements:</p>
+        <ul className="list-disc pl-5 space-y-0.5">
+          <li className={strength.hasMinLength ? "text-green-400" : ""}>
+            At least 8 characters
+          </li>
+          <li className={strength.hasUppercase ? "text-green-400" : ""}>
+            At least one uppercase letter
+          </li>
+          <li className={strength.hasLowercase ? "text-green-400" : ""}>
+            At least one lowercase letter
+          </li>
+          <li className={strength.hasNumber ? "text-green-400" : ""}>
+            At least one number
+          </li>
+          <li className={strength.hasSpecial ? "text-green-400" : ""}>
+            At least one special character
+          </li>
+        </ul>
+        <p className="pt-1 text-gray-300">
+          (Must satisfy at least 3 of the character type requirements)
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export default function Register() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -18,6 +124,10 @@ export default function Register() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [configWarning, setConfigWarning] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState({
+    score: 0,
+    valid: false
+  });
 
   useEffect(() => {
     // Check if Supabase is configured
@@ -25,6 +135,15 @@ export default function Register() {
       setConfigWarning("Warning: Supabase is not properly configured. Registration will not work.");
     }
   }, []);
+
+  useEffect(() => {
+    // Update password strength when password changes
+    if (formData.password) {
+      setPasswordStrength(calculatePasswordStrength(formData.password));
+    } else {
+      setPasswordStrength({ score: 0, valid: false });
+    }
+  }, [formData.password]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -45,8 +164,8 @@ export default function Register() {
       return;
     }
 
-    if (formData.password.length < 8) {
-      setError("Password must be at least 8 characters long");
+    if (!passwordStrength.valid) {
+      setError("Your password doesn't meet the minimum requirements. It must be at least 8 characters long and contain at least 3 different character types (uppercase, lowercase, numbers, special characters).");
       setIsLoading(false);
       return;
     }
@@ -151,10 +270,10 @@ export default function Register() {
                     className="w-full bg-gray-800/50 border border-blue-500/30 rounded-lg p-3 text-white"
                     placeholder="Create a password"
                     required
-                    minLength={8}
                     value={formData.password}
                     onChange={handleChange}
                   />
+                  {formData.password && <PasswordStrength password={formData.password} />}
                 </div>
 
                 <div>
@@ -171,12 +290,29 @@ export default function Register() {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                   />
+                  {formData.password && formData.confirmPassword && (
+                    <div className="mt-2">
+                      {formData.password === formData.confirmPassword ? (
+                        <p className="text-green-400 text-sm">Passwords match</p>
+                      ) : (
+                        <p className="text-red-400 text-sm">Passwords don't match</p>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <button
                   type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition duration-300 w-full flex justify-center"
-                  disabled={isLoading}
+                  className={`${
+                    passwordStrength.valid && formData.password === formData.confirmPassword
+                      ? "bg-blue-500 hover:bg-blue-600"
+                      : "bg-blue-500/50 cursor-not-allowed"
+                  } text-white font-medium py-3 px-8 rounded-lg transition duration-300 w-full flex justify-center`}
+                  disabled={
+                    isLoading ||
+                    !passwordStrength.valid ||
+                    formData.password !== formData.confirmPassword
+                  }
                 >
                   {isLoading ? (
                     <span className="inline-flex items-center">
