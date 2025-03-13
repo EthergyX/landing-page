@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
-import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import PasswordStrength from "@/components/PasswordStrength";
 import { checkPassword } from "@/utils/passwordUtils";
