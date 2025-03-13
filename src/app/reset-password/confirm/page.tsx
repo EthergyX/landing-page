@@ -66,10 +66,11 @@ export default function ResetPasswordConfirm() {
       setTimeout(() => {
         router.push("/login?reset=true");
       }, 3000);
-    } catch (err: any) {
-      setError(err.message || "Failed to reset password.");
-      setIsLoading(false);
-    }
+    } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to reset password.";
+        setError(errorMessage);
+        setIsLoading(false);
+      }
   };
 
   return (

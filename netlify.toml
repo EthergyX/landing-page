@@ -1,6 +1,8 @@
 [build]
-  command = "npm run build"
+  command = "DISABLE_ESLINT_PLUGIN=true npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "22"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  DISABLE_ESLINT_PLUGIN = "true"

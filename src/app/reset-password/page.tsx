@@ -27,11 +27,12 @@ export default function ResetPassword() {
       }
 
       setSuccess(true);
-    } catch (err: any) {
-      setError(err.message || "Failed to send password reset email.");
-    } finally {
-      setIsLoading(false);
-    }
+    } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to send password reset email.";
+        setError(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
   };
 
   return (
