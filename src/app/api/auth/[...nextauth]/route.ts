@@ -1,7 +1,6 @@
 // src/app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
 import { supabase } from "@/lib/supabase";
 import type { JWT } from "next-auth/jwt";
 import type { Session } from "next-auth";
@@ -21,35 +20,29 @@ const handler = NextAuth({
         }
 
         try {
-          // Query the user from Supabase
-          const { data: user, error } = await supabase
+          // Authenticate with Supabase
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: credentials.email,
+            password: credentials.password,
+          });
+
+          if (error || !data.user) {
+            console.log("Login error:", error?.message);
+            return null;
+          }
+
+          // Get user profile data
+          const { data: userProfile } = await supabase
             .from("users")
             .select("*")
-            .eq("email", credentials.email.toLowerCase())
+            .eq("id", data.user.id)
             .single();
 
-          if (error || !user) {
-            console.log("User not found:", credentials.email);
-            return null;
-          }
-
-          // Check if the password matches
-          const passwordMatch = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
-
-          if (!passwordMatch) {
-            console.log("Password doesn't match for:", credentials.email);
-            return null;
-          }
-
-          console.log("Login successful for:", credentials.email);
-          
+          // Return user data for the session
           return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
+            id: data.user.id,
+            email: data.user.email,
+            name: userProfile?.name || data.user.user_metadata?.name || null,
           };
         } catch (error) {
           console.error("Auth error:", error);
@@ -60,16 +53,29 @@ const handler = NextAuth({
   ],
   pages: {
     signIn: "/login",
+    signOut: "/login",
+    error: "/login",
+    verifyRequest: "/register/confirmation",
   },
   callbacks: {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+      }
+      return token;
+    },
     async session({ session, token }: { session: Session; token?: JWT }) {
       if (token && session.user) {
-        session.user.id = token.sub;
+        session.user.id = token.id as string;
+        session.user.email = token.email;
+        session.user.name = token.name;
       }
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET || "your-secret-key-change-in-production",
+  secret: process.env.NEXTAUTH_SECRET || "your-fallback-secret-change-in-production",
   debug: process.env.NODE_ENV === "development",
 });
 

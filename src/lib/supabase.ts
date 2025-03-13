@@ -13,7 +13,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Create Supabase client with fallback empty strings to prevent crashes
 export const supabase = createClient(
   supabaseUrl || "",
-  supabaseAnonKey || ""
+  supabaseAnonKey || "",
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+  }
 );
 
 // Export a function to check if Supabase is properly configured

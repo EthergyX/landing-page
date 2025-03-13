@@ -1,3 +1,4 @@
+// src/app/register/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -61,13 +62,13 @@ export default function Register() {
 
     // Validate form
     if (!passwordsMatch) {
-      setError("Passwords don&apos;t match");
+      setError("Passwords don't match");
       setIsLoading(false);
       return;
     }
 
     if (!passwordValid) {
-      setError("Your password doesn&apos;t meet the minimum requirements.");
+      setError("Your password doesn't meet the minimum requirements.");
       setIsLoading(false);
       return;
     }
@@ -92,8 +93,8 @@ export default function Register() {
         throw new Error(data.error || "Registration failed");
       }
 
-      // Redirect to login page after successful registration
-      router.push("/login?registered=true");
+      // Redirect to confirmation page after successful registration
+      router.push("/register/confirmation");
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "An error occurred during registration";
       setError(errorMessage);

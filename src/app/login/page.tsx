@@ -1,12 +1,13 @@
+// src/app/login/page.tsx
 "use client";
 
 import React, { Suspense, useState, useEffect } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import { isSupabaseConfigured } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 export default function Login() {
   return (
@@ -42,7 +43,13 @@ function LoginForm() {
     // Check if user was just registered
     const registered = searchParams.get("registered");
     if (registered === "true") {
-      setSuccess("Registration successful! You can now log in with your credentials.");
+      setSuccess("Registration successful! Please check your email for a verification link.");
+    }
+
+    // Check if user just verified their email
+    const verified = searchParams.get("verified");
+    if (verified === "true") {
+      setSuccess("Email verified successfully! You can now log in with your credentials.");
     }
   }, [searchParams]);
 
@@ -62,21 +69,23 @@ function LoginForm() {
     try {
       console.log("Attempting login with:", formData.email);
 
-      const result = await signIn("credentials", {
-        redirect: false,
+      // Use Supabase auth directly
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       });
 
-      if (result?.error) {
-        console.log("Login error:", result.error);
-        setError("Invalid email or password");
+      if (error) {
+        console.log("Login error:", error.message);
+        setError(error.message);
         setIsLoading(false);
         return;
       }
 
-      // Redirect to dashboard on successful login
-      router.push("/dashboard");
+      if (data.session) {
+        // Redirect to dashboard on successful login
+        router.push("/dashboard");
+      }
     } catch (error) {
       console.error("Login error:", error);
       setError("An error occurred during login. Please check your connection and try again.");
@@ -147,6 +156,15 @@ function LoginForm() {
                   value={formData.password}
                   onChange={handleChange}
                 />
+              </div>
+
+              <div className="text-right">
+                <Link
+                  href="/reset-password"
+                  className="text-blue-400 hover:text-blue-300 text-sm transition"
+                >
+                  Forgot your password?
+                </Link>
               </div>
 
               <button

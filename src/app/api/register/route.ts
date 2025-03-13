@@ -1,6 +1,5 @@
 // src/app/api/register/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { checkPassword } from "@/utils/passwordUtils";
 
@@ -44,61 +43,55 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if user already exists
-    const { data: existingUser, error: queryError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("email", email.toLowerCase())
-      .single();
+    // Use Supabase's built-in sign-up with email confirmation
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+        },
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
+      },
+    });
 
-    if (queryError && queryError.code !== "PGRST116") {
-      // PGRST116 is the error code for "no rows returned"
-      console.error("Error checking existing user:", queryError);
+    if (error) {
+      console.error("Error creating user:", error);
       return NextResponse.json(
-        { error: "Database error: " + queryError.message },
+        { error: error.message },
         { status: 500 }
       );
     }
 
-    if (existingUser) {
+    // Check if the user was created but needs to confirm their email
+    if (data?.user?.identities?.length === 0) {
       return NextResponse.json(
         { error: "User with this email already exists" },
         { status: 400 }
       );
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Also store user profile info in your users table if you're using it
+    if (data?.user?.id) {
+      const { error: profileError } = await supabase
+        .from("users")
+        .insert([
+          {
+            id: data.user.id,
+            name,
+            email: email.toLowerCase(),
+            created_at: new Date().toISOString(),
+          },
+        ]);
 
-    // Create new user
-    const { error: insertError } = await supabase.from("users").insert([
-      {
-        name,
-        email: email.toLowerCase(),
-        password: hashedPassword,
-        created_at: new Date().toISOString(),
-      },
-    ]);
-
-    if (insertError) {
-      console.error("Error creating user:", insertError);
-      let errorMessage = "Failed to create user";
-      
-      // Check if it's a foreign key constraint or table doesn't exist
-      if (insertError.code === "23503") {
-        errorMessage = "Foreign key constraint error. Database schema issue.";
-      } else if (insertError.code === "42P01") {
-        errorMessage = "Table 'users' does not exist. Database setup issue.";
+      if (profileError) {
+        console.error("Error creating user profile:", profileError);
+        // Continue anyway as the auth user is created
       }
-      
-      return NextResponse.json(
-        { error: errorMessage, details: insertError.message },
-        { status: 500 }
-      );
     }
 
     return NextResponse.json(
-      { message: "User registered successfully" },
+      { message: "Verification email sent. Please check your inbox to confirm your email." },
       { status: 201 }
     );
   } catch (error) {
