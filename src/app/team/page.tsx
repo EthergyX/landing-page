@@ -15,7 +15,7 @@ export default function Team() {
       imgSrc: "/team/EthanHeadshot.jpg", // You'll need to add these images
     },
     {
-      name: "Jake Botswald",
+      name: "Jake Oswald",
       position: "Chief Product Officer",
       bio: "Jake is working towards his Master's of Geographic Information Systems and Technologies. He is building a program to optimize DER deployments in virtual power plants.",
       linkedinUrl: "https://www.linkedin.com/in/ake-oswald-472480214",
