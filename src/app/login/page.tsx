@@ -1,8 +1,7 @@
-// src/app/login/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AuthFormContainer } from "@/components/auth/AuthFormContainer";
 import { FormInput } from "@/components/form/FormInput";
@@ -11,11 +10,10 @@ import { Alert } from "@/components/form/Alert";
 import { useAuth } from "@/contexts/AuthContext";
 import { isSupabaseConfigured } from "@/lib/supabase";
 
-export default function Login() {
+// Create a client component that uses useSearchParams
+const LoginContent = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { signIn, isLoading: authLoading } = useAuth();
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -31,10 +29,11 @@ export default function Login() {
       setConfigWarning("Warning: Supabase is not properly configured. Authentication will not work.");
     }
 
-    // Check URL parameters for status messages
-    const registered = searchParams.get("registered");
-    const verified = searchParams.get("verified");
-    const reset = searchParams.get("reset");
+    // Handle URL parameters through window location instead
+    const urlParams = new URLSearchParams(window.location.search);
+    const registered = urlParams.get("registered");
+    const verified = urlParams.get("verified");
+    const reset = urlParams.get("reset");
 
     if (registered === "true") {
       setSuccess("Registration successful! Please check your email for a verification link.");
@@ -43,7 +42,7 @@ export default function Login() {
     } else if (reset === "true") {
       setSuccess("Your password has been reset successfully. You can now log in with your new password.");
     }
-  }, [searchParams]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -135,5 +134,14 @@ export default function Login() {
         </div>
       </form>
     </AuthFormContainer>
+  );
+};
+
+// Main login page with Suspense boundary
+export default function Login() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-blue-100">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

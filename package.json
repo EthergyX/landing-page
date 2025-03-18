@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --queit --max-warnings=0",
-    "lint:fix": "next lint --fix"
+    "lint": "next lint --quiet --max-warnings=0",
+    "lint:fix": "next lint --fix",
+    "netlify:build": "DISABLE_ESLINT_PLUGIN=true next build"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
