@@ -4,23 +4,13 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  NETLIFY_NEXT_PLUGIN_SKIP = "false"
   DISABLE_ESLINT_PLUGIN = "true"
-  NEXT_USE_NETLIFY_EDGE = "true"
 
-# Add Next.js specific redirects to handle client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
+# These redirects are handled by the Next.js plugin
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
-# Explicitly handle API routes
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/nextjs-server"
-  status = 200
-
-# Enable Edge Functions
-[functions]
-  node_bundler = "esbuild"
+# Edge Functions aren't needed when using the Next.js plugin
+# [functions]
+#   node_bundler = "esbuild"

@@ -3,6 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { supabase } from "@/lib/supabase";
 
+// This tells Next.js that this route should be statically generated
+export const dynamic = "force-static";
+
+// This tells Next.js to regenerate the page at most once every hour
+export const revalidate = 3600;
+
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");

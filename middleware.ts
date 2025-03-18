@@ -1,55 +1,71 @@
-// src/components/auth/RequireAuth.tsx
-"use client";
+// middleware.ts
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext";
-
-interface RequireAuthProps {
-  children: React.ReactNode;
-}
-
-export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
-  const { user, isLoading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    // If auth state is loaded and there's no user, redirect to login
-    if (!isLoading && !user) {
-      router.push("/login");
+// This function can be marked `async` if using `await` inside
+export async function middleware(request: NextRequest) {
+  // Create a Supabase client configured to use cookies
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+  
+  const requestHeaders = new Headers(request.headers);
+  const supabase = createServerClient(
+    supabaseUrl,
+    supabaseKey,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value;
+        },
+        set(name, value, options) {
+          // If the cookie is being set, update the request headers
+          requestHeaders.set("Set-Cookie", `${name}=${value}; Path=${options?.path ?? "/"}`);
+        },
+        remove(name, options) {
+          // If the cookie is being deleted, update the request headers
+          requestHeaders.set("Set-Cookie", `${name}=; Path=${options?.path ?? "/"}; Max-Age=0`);
+        },
+      },
     }
-  }, [user, isLoading, router]);
+  );
 
-  // Show loading state while checking auth
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <svg
-            className="animate-spin h-12 w-12 text-blue-400 mx-auto mb-4"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          <p className="text-xl text-blue-100">Loading...</p>
-        </div>
-      </div>
-    );
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  // Check auth condition
+  const isLoggedIn = !!session;
+  const isAuthPage = 
+    request.nextUrl.pathname === "/login" || 
+    request.nextUrl.pathname === "/register" || 
+    request.nextUrl.pathname.startsWith("/auth/") ||
+    request.nextUrl.pathname === "/reset-password";
+  const isDashboardPage = request.nextUrl.pathname === "/dashboard";
+
+  // Redirect if user is logged in and trying to access auth pages
+  if (isLoggedIn && isAuthPage) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+  
+  // Redirect if user is not logged in and trying to access dashboard
+  if (!isLoggedIn && isDashboardPage) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // If not loading and user exists, show the protected content
-  return user ? <>{children}</> : null;
+  // Return the response with updated headers
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+}
+
+// See "Matching Paths" below to learn more
+export const config = {
+  matcher: [
+    '/login',
+    '/register',
+    '/dashboard/:path*',
+    '/auth/:path*',
+    '/reset-password',
+  ],
 };
