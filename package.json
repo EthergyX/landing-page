@@ -10,6 +10,7 @@
     "lint:fix": "next lint --fix"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.39.7",
     "bcryptjs": "^3.0.2",
     "framer-motion": "^12.0.0",

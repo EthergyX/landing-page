@@ -1,16 +1,22 @@
-"use client";
 // src/components/Navigation.tsx
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSession, signOut } from "next-auth/react";
-import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navigation() {
-  const { data: session } = useSession();
+  const { user, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -55,7 +61,7 @@ export default function Navigation() {
           </div>
 
           <div className="hidden md:flex space-x-4">
-            {session ? (
+            {user ? (
               <>
                 <Link
                   href="/dashboard"
@@ -64,7 +70,7 @@ export default function Navigation() {
                   Dashboard
                 </Link>
                 <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
+                  onClick={handleSignOut}
                   className="border border-blue-500 text-white hover:bg-blue-600 px-6 py-2 rounded-full transition duration-300"
                 >
                   Sign Out
@@ -89,7 +95,7 @@ export default function Navigation() {
           </div>
 
           <div className="md:hidden">
-            <button onClick={toggleMobileMenu}>
+            <button onClick={toggleMobileMenu} aria-label="Toggle menu">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -142,7 +148,7 @@ export default function Navigation() {
               </Link>
               
               <div className="border-t border-gray-700 pt-4 mt-2">
-                {session ? (
+                {user ? (
                   <>
                     <Link
                       href="/dashboard"
@@ -152,10 +158,7 @@ export default function Navigation() {
                       Dashboard
                     </Link>
                     <button
-                      onClick={() => {
-                        signOut({ callbackUrl: "/" });
-                        setMobileMenuOpen(false);
-                      }}
+                      onClick={handleSignOut}
                       className="w-full text-center border border-blue-500 text-white hover:bg-blue-600 px-6 py-2 rounded-full transition duration-300 mt-2"
                     >
                       Sign Out
